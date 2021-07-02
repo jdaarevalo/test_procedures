@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+    postgres:
+        image: procedures/postgres_pgtag:0.1
+        restart: always
+        environment: 
+          - POSTGRES_USER=postgres
+          - POSTGRES_PASSWORD=postgres
+        logging:
+          options:
+            max-size: 10m
+            max-file: "3"
+        ports:
+          - '5438:5432'
+        volumes:
+          # data in local
+          - ./postgres-data:/var/lib/postgresql/data
+          # Adding pgTAP to the Database
+          - ./test/add_pgtag_to_postgres.sh:/docker-entrypoint-initdb.d/add_pgtag_to_postgres.sh
+          # copy procedures folder
+          - ./procedures:/procedures
+          # copy functions folder
+          - ./functions:/functions
+          # copy the files to test
+          - ./test:/test
+
